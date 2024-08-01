@@ -21,14 +21,17 @@ func main() {
 			os.Exit(1)
 		}
 
-		dat := make([]byte, 0)
-		n, err := conn.Read(dat)
-		if err != nil {
-			fmt.Println(err.Error())
-		} else if n > 0 {
-			fmt.Println(string(dat))
-		}
+		dat := make([]byte, 1000)
+		for {
+			n, err := conn.Read(dat)
+			if err != nil {
+				fmt.Println(err.Error())
+				break
+			} else if n > 0 {
+				fmt.Println(string(dat))
+			}
 
-		conn.Write([]byte("+PONG\r\n"))
+			conn.Write([]byte("+PONG\r\n"))
+		}
 	}
 }
