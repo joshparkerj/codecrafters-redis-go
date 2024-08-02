@@ -37,3 +37,5 @@ Note: This section is for stages 2 and beyond.
 
 1. respond to ping
 1. respond to a second ping
+1. (note: I believe my program should be expected to respond to a second ping if it comes from a second connection as well)
+
