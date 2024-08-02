@@ -6,6 +6,28 @@ import (
 	"os"
 )
 
+func acceptConnection(l net.Listener) {
+	conn, err := l.Accept()
+
+	if err != nil {
+		fmt.Println("Error accepting connection: ", err.Error())
+		os.Exit(1)
+	}
+
+	dat := make([]byte, 1000)
+	for {
+		n, err := conn.Read(dat)
+		if err != nil {
+			fmt.Println(err.Error())
+			break
+		} else if n > 0 {
+			fmt.Println(string(dat))
+		}
+
+		conn.Write([]byte("+PONG\r\n"))
+	}
+}
+
 func main() {
 	l, err := net.Listen("tcp", "0.0.0.0:6379")
 	if err != nil {
@@ -14,24 +36,6 @@ func main() {
 	}
 
 	for {
-		conn, err := l.Accept()
-
-		if err != nil {
-			fmt.Println("Error accepting connection: ", err.Error())
-			os.Exit(1)
-		}
-
-		dat := make([]byte, 1000)
-		for {
-			n, err := conn.Read(dat)
-			if err != nil {
-				fmt.Println(err.Error())
-				break
-			} else if n > 0 {
-				fmt.Println(string(dat))
-			}
-
-			conn.Write([]byte("+PONG\r\n"))
-		}
+		go acceptConnection(l)
 	}
 }
